@@ -28,5 +28,18 @@ SVG 使用固定坐标系等比缩放，支持桌面和手机布局。动画使�
 
 - [需求分析](docs/tasks/pelican-bike/requirement.md)
 - [设计方案](docs/tasks/pelican-bike/design.md)
+- [测试报告](docs/tasks/pelican-bike/test.md)
 
-当前仓库没有独立的构建、测试、lint 或类型检查脚本。完整验收将在任务测试阶段按设计文档中的计划进行。
+## 验证
+
+仓库没有构建、lint 或类型检查配置。已补充 [浏览器验收脚本](tests/pelican-browser.js)，供云端工作台已有的 Playwright 浏览器执行，不需要给页面安装依赖。
+
+启动上述静态服务后，用浏览器工具 `browser_run_code_unsafe` 加载 `tests/pelican-browser.js`。脚本返回各项检查结果与通过／失败计数；截图保存到 `.ca/screenshots/`。脚本依赖浏览器工具提供的 `page`，不能通过直接运行 Node 来执行验收。
+
+可以单独检查脚本语法：
+
+```sh
+node --check tests/pelican-browser.js
+```
+
+完整执行步骤、结果和验证限制见测试报告。
