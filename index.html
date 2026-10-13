@@ -132,8 +132,8 @@
           </g>
           <g id="far-limb" stroke-linecap="round" stroke-linejoin="round">
             <path id="far-crank" d="M475 463 447 463" fill="none" stroke="#6d786c" stroke-width="6"></path>
-            <path id="far-leg-outline" d="M450 342 497.9 386.3 447 463" fill="none" stroke="#384a42" stroke-width="13"></path>
-            <path id="far-leg" d="M450 342 497.9 386.3 447 463" fill="none" stroke="#ca9353" stroke-width="8"></path>
+            <path id="far-leg-outline" d="M450 342 508.168 403.979 447 463" fill="none" stroke="#384a42" stroke-width="13"></path>
+            <path id="far-leg" d="M450 342 508.168 403.979 447 463" fill="none" stroke="#ca9353" stroke-width="8"></path>
             <g id="far-foot" transform="translate(447 463)">
               <path d="M-8-8Q-7-19 2-16L10-7 20-4 16 0H-8Z" fill="#ce9655" stroke="#384a42" stroke-width="2.5"></path>
               <path d="M-13 3H20" stroke="#5d665b" stroke-width="5"></path>
@@ -166,8 +166,8 @@
             <path d="M368 334q-3 21 17 30" fill="none" stroke="#d6ddcc" stroke-width="4"></path>
           </g>
           <g id="near-limb" stroke-linecap="round" stroke-linejoin="round">
-            <path id="near-leg-outline" d="M450 342 523.8 381.4 503 463" fill="none" stroke="#304440" stroke-width="14"></path>
-            <path id="near-leg" d="M450 342 523.8 381.4 503 463" fill="none" stroke="#e9b566" stroke-width="9"></path>
+            <path id="near-leg-outline" d="M450 342 525.507 381.034 503 463" fill="none" stroke="#304440" stroke-width="14"></path>
+            <path id="near-leg" d="M450 342 525.507 381.034 503 463" fill="none" stroke="#e9b566" stroke-width="9"></path>
             <path id="near-crank" d="M475 463 503 463" fill="none" stroke="#304440" stroke-width="6"></path>
             <circle cx="475" cy="463" r="5" fill="#304440"></circle>
             <g id="near-foot" transform="translate(503 463)">
@@ -193,5 +193,126 @@
       </div>
     </section>
   </main>
+  <script>
+    (() => {
+      'use strict';
+
+      const geometry = {
+        hip: { x: 450, y: 342 },
+        crank: { x: 475, y: 463 },
+        crankRadius: 28,
+        upperLeg: 85,
+        lowerLeg: 85,
+        wheelRadius: 82,
+        wheelRatio: 2,
+        period: 2400,
+        roadSpacing: 120
+      };
+      const byId = (id) => document.getElementById(id);
+      const button = byId('playback');
+      const label = byId('playback-label');
+      const pauseIcon = byId('pause-icon');
+      const playIcon = byId('play-icon');
+      const wheels = [byId('rear-spokes'), byId('front-spokes')];
+      const road = byId('road-lines');
+      const limbs = ['near', 'far'].map((side) => ({
+        leg: byId(`${side}-leg`),
+        outline: byId(`${side}-leg-outline`),
+        crank: byId(`${side}-crank`),
+        foot: byId(`${side}-foot`)
+      }));
+      const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let playing = !motionPreference.matches;
+      let elapsed = 0;
+      let previousTimestamp = null;
+      let frameId = null;
+
+      const coordinate = (value) => value.toFixed(3);
+
+      function drawLeg(limb, angle) {
+        const { hip, crank, crankRadius, upperLeg, lowerLeg } = geometry;
+        const foot = {
+          x: crank.x + crankRadius * Math.cos(angle),
+          y: crank.y + crankRadius * Math.sin(angle)
+        };
+        const dx = foot.x - hip.x;
+        const dy = foot.y - hip.y;
+        const actualDistance = Math.max(Math.hypot(dx, dy), 0.001);
+        // Keep the chosen knee bend consistent throughout the pedal cycle.
+        const distance = Math.max(
+          Math.abs(upperLeg - lowerLeg) + 0.001,
+          Math.min(actualDistance, upperLeg + lowerLeg - 0.001)
+        );
+        const ux = dx / actualDistance;
+        const uy = dy / actualDistance;
+        const projection = (upperLeg ** 2 - lowerLeg ** 2 + distance ** 2) / (2 * distance);
+        const bend = Math.sqrt(Math.max(0, upperLeg ** 2 - projection ** 2));
+        const knee = {
+          x: hip.x + projection * ux + bend * uy,
+          y: hip.y + projection * uy - bend * ux
+        };
+        const path = `M${hip.x} ${hip.y} L${coordinate(knee.x)} ${coordinate(knee.y)} L${coordinate(foot.x)} ${coordinate(foot.y)}`;
+        limb.leg.setAttribute('d', path);
+        limb.outline.setAttribute('d', path);
+        limb.crank.setAttribute('d', `M${crank.x} ${crank.y} L${coordinate(foot.x)} ${coordinate(foot.y)}`);
+        limb.foot.setAttribute('transform', `translate(${coordinate(foot.x)} ${coordinate(foot.y)})`);
+      }
+
+      function render() {
+        const phase = (elapsed % geometry.period) / geometry.period;
+        const angle = phase * Math.PI * 2;
+        const rotation = phase * 360 * geometry.wheelRatio;
+        wheels.forEach((wheel) => wheel.setAttribute('transform', `rotate(${coordinate(rotation)})`));
+        drawLeg(limbs[0], angle);
+        drawLeg(limbs[1], angle + Math.PI);
+        // Positive dash offset moves the road to the left; wheel rotation is clockwise.
+        const distance = (elapsed / geometry.period) * Math.PI * 2 * geometry.wheelRadius * geometry.wheelRatio;
+        road.setAttribute('stroke-dashoffset', coordinate(distance % geometry.roadSpacing));
+      }
+
+      function tick(timestamp) {
+        frameId = null;
+        if (!playing || document.hidden) return;
+        if (previousTimestamp !== null) {
+          elapsed += Math.min(Math.max(timestamp - previousTimestamp, 0), 64);
+        }
+        previousTimestamp = timestamp;
+        render();
+        frameId = window.requestAnimationFrame(tick);
+      }
+
+      function syncScheduler() {
+        if (frameId !== null) window.cancelAnimationFrame(frameId);
+        frameId = null;
+        previousTimestamp = null;
+        if (playing && !document.hidden) frameId = window.requestAnimationFrame(tick);
+      }
+
+      function syncButton() {
+        label.textContent = playing ? '暂停动画' : '播放动画';
+        pauseIcon.toggleAttribute('hidden', !playing);
+        playIcon.toggleAttribute('hidden', playing);
+      }
+
+      button.addEventListener('click', () => {
+        playing = !playing;
+        syncButton();
+        syncScheduler();
+      });
+      document.addEventListener('visibilitychange', syncScheduler);
+      motionPreference.addEventListener('change', (event) => {
+        if (event.matches) {
+          playing = false;
+          syncButton();
+          syncScheduler();
+        }
+      });
+
+      render();
+      syncButton();
+      button.hidden = false;
+      syncScheduler();
+    })();
+  </script>
 </body>
 </html>
