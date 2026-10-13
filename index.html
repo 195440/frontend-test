@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f4ec">
+  <meta name="description" content="一只鹈鹕，一辆自行车，一段悠闲的海边时光。">
+  <link rel="icon" href="data:,">
+  <title>鹈鹕的海边骑行</title>
+  <style>
+    :root { color-scheme: light; --paper: #f6f4ec; --ink: #283e3c; --muted: #68776f; --line: #d9ddd0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    button { font: inherit; }
+    [hidden] { display: none !important; }
+    .page { width: min(100% - 64px, 1000px); margin: 0 auto; }
+    .masthead { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 28px 0 21px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .15em; }
+    .brand-mark { width: 27px; height: 27px; }
+    .edition { color: var(--muted); font-size: 10px; letter-spacing: .15em; }
+    .intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding: 36px 0 26px; }
+    .eyebrow { margin: 0 0 9px; color: var(--muted); font-size: 11px; letter-spacing: .18em; }
+    h1 { margin: 0; font-size: clamp(27px, 4.5vw, 43px); font-weight: 600; letter-spacing: .025em; line-height: 1.4; }
+    .subtitle { margin: 10px 0 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .control { display: inline-flex; align-items: center; justify-content: center; gap: 9px; flex-shrink: 0; min-height: 44px; padding: 11px 17px; border: 1px solid var(--ink); border-radius: 100px; color: var(--paper); background: var(--ink); cursor: pointer; font-size: 12px; }
+    .control:hover { background: #3b5650; }
+    .control:focus-visible { outline: 3px solid #b36b36; outline-offset: 5px; }
+    .control-icon { width: 14px; height: 14px; fill: currentColor; }
+    .scene { margin: 0; border: 1px solid #d1dcd4; border-radius: 20px; overflow: hidden; background: #dcebe8; }
+    .scene > svg { width: 100%; height: auto; display: block; }
+    .caption { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 17px 0 29px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .caption-text { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #698c76; flex-shrink: 0; }
+    .caption-index { letter-spacing: .12em; white-space: nowrap; }
+    @media (max-width: 600px) {
+      .page { width: calc(100% - 32px); }
+      .masthead { padding: 20px 0 16px; }
+      .edition { font-size: 9px; letter-spacing: .06em; }
+      .brand { font-size: 12px; }
+      .intro { align-items: flex-start; flex-wrap: wrap; padding: 27px 0 20px; gap: 16px; }
+      .subtitle { font-size: 12px; }
+      .scene { border-radius: 14px; }
+      .caption { align-items: flex-start; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8">
+          <circle cx="8" cy="22" r="6"></circle><circle cx="25" cy="22" r="6"></circle>
+          <path d="M8 22 14 11 20 22H8l-4-9M14 11h8l3 11M11 9h6M21 7h3l2 4"></path>
+        </svg>
+        <span>慢慢来</span>
+      </div>
+      <span class="edition">THE SLOW LANE · NO. 001</span>
+    </header>
+    <section aria-labelledby="page-title">
+      <div class="intro">
+        <div>
+          <p class="eyebrow">海风正好，出发吧</p>
+          <h1 id="page-title">鹈鹕的海边骑行</h1>
+          <p class="subtitle">不赶时间。跟着海风，把日子骑得慢一点。</p>
+        </div>
+        <button id="playback" class="control" type="button" hidden>
+          <svg class="control-icon" viewBox="0 0 16 16" aria-hidden="true">
+            <g id="pause-icon"><rect x="3" y="2" width="3" height="12" rx="1"></rect><rect x="10" y="2" width="3" height="12" rx="1"></rect></g>
+            <path id="play-icon" d="M4 2 14 8 4 14Z" hidden></path>
+          </svg>
+          <span id="playback-label">暂停动画</span>
+        </button>
+      </div>
+      <figure class="scene" aria-label="海边骑行插画">
+        <svg id="ride-scene" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="scene-title scene-description">
+          <title id="scene-title">鹈鹕在海边骑自行车</title>
+          <desc id="scene-description">长嘴、橙色喉囊的白色鹈鹕骑着青绿色自行车，双脚交替踩踏，车轮转动，沙色路面向后移动。动画暂停时保留完整骑行姿态，背景是海面、云朵和暖色太阳。</desc>
+          <defs>
+            <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#e7f0e9"></stop><stop offset="1" stop-color="#d6e9e5"></stop></linearGradient>
+            <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#91bfba"></stop><stop offset="1" stop-color="#b6d3c3"></stop></linearGradient>
+            <clipPath id="road-clip"><rect x="0" y="574" width="1000" height="80"></rect></clipPath>
+            <g id="spoke-shape" fill="none" stroke="#738b84" stroke-width="2.2">
+              <path d="M-74 0H74M0-74V74M-52.3-52.3 52.3 52.3M-52.3 52.3 52.3-52.3"></path>
+              <circle r="71" stroke="#b3c6b9" stroke-width="2"></circle>
+            </g>
+          </defs>
+          <g id="landscape">
+            <path fill="url(#sky)" d="M0 0H1000V700H0Z"></path>
+            <circle cx="790" cy="157" r="60" fill="#eab994"></circle>
+            <circle cx="790" cy="157" r="75" fill="none" stroke="#eab994" stroke-opacity=".35" stroke-width="1.5"></circle>
+            <g fill="#fafaf1" opacity=".8">
+              <path d="M95 170c0-14 14-24 29-21 2-24 30-37 49-20 15-11 36-1 36 16 17-1 25 11 23 25Z"></path>
+              <path d="M594 102c-1-10 9-19 20-17 5-22 38-23 45-2 16-7 34 6 32 19Z"></path>
+              <path d="M833 270c1-11 12-19 24-15 7-19 30-20 39-4 14-3 24 6 25 19Z"></path>
+            </g>
+            <g fill="none" stroke="#7e9c92" stroke-width="2.5" stroke-linecap="round">
+              <path d="M270 112q9-10 18 0 9-10 18 0M315 139q6-7 12 0 6-7 12 0M870 100q6-7 12 0 6-7 12 0"></path>
+            </g>
+            <path d="M0 380Q150 355 272 379T552 379T1000 373V525H0Z" fill="url(#sea)"></path>
+            <path d="M0 393Q114 384 222 400T441 398T680 400T1000 395" fill="none" stroke="#d8e9d9" stroke-width="3"></path>
+            <g stroke="#dceade" stroke-width="3" stroke-linecap="round" opacity=".8">
+              <path d="M54 425h48m79-13h53m484 15h59m72-15h38m-21 40h57M73 459h34m30 12h60m541 3h65"></path>
+            </g>
+            <path d="M0 427Q83 435 163 413L184 410 218 439 243 451 218 491H0Z" fill="#a3b2a0"></path>
+            <path d="M0 493Q124 468 247 491T510 491T777 488T1000 489V700H0Z" fill="#eae0c3"></path>
+            <path d="M0 494Q127 470 247 493T510 493T777 490T1000 491" fill="none" stroke="#f7f0d9" stroke-width="7"></path>
+            <path d="M0 635Q159 623 310 639T660 640T1000 632V700H0Z" fill="#ded7b8"></path>
+            <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M107 551q-10-26-25-35m25 35q3-42 14-59m-13 53q14-23 30-27" stroke="#7d9474" stroke-width="4"></path>
+              <path d="M881 545q-5-35-19-45m19 45q8-30 24-39m-23 29q20-10 28-8" stroke="#7d9474" stroke-width="4"></path>
+              <path d="M103 550h20m751-3h21" stroke="#b5b792" stroke-width="3"></path>
+            </g>
+            <g fill="#b8b594"><ellipse cx="179" cy="553" rx="7" ry="3"></ellipse><ellipse cx="815" cy="567" rx="9" ry="3"></ellipse><ellipse cx="762" cy="624" rx="6" ry="2.5"></ellipse></g>
+          </g>
+          <g clip-path="url(#road-clip)">
+            <path id="road-lines" d="M-100 607H1100" stroke="#c5b996" stroke-width="3" stroke-linecap="round" stroke-dasharray="26 94"></path>
+          </g>
+          <ellipse cx="505" cy="566" rx="238" ry="12" fill="#6e7c69" opacity=".12"></ellipse>
+          <g id="wheels" fill="none" stroke-linecap="round">
+            <g transform="translate(345 480)">
+              <circle r="82" stroke="#304440" stroke-width="12"></circle><circle r="76" stroke="#e5dfc5" stroke-width="3"></circle>
+              <g id="rear-spokes"><use href="#spoke-shape"></use></g>
+              <circle r="8" fill="#a3b9a9" stroke="#304440" stroke-width="3"></circle>
+              <path d="M-64-67A93 93 0 0 1 63-68" stroke="#688b79" stroke-width="5"></path>
+            </g>
+            <g transform="translate(665 480)">
+              <circle r="82" stroke="#304440" stroke-width="12"></circle><circle r="76" stroke="#e5dfc5" stroke-width="3"></circle>
+              <g id="front-spokes"><use href="#spoke-shape"></use></g>
+              <circle r="8" fill="#a3b9a9" stroke="#304440" stroke-width="3"></circle>
+              <path d="M-64-67A93 93 0 0 1 63-68" stroke="#688b79" stroke-width="5"></path>
+            </g>
+          </g>
+          <g id="far-limb" stroke-linecap="round" stroke-linejoin="round">
+            <path id="far-crank" d="M475 463 447 463" fill="none" stroke="#6d786c" stroke-width="6"></path>
+            <path id="far-leg-outline" d="M450 342 497.9 386.3 447 463" fill="none" stroke="#384a42" stroke-width="13"></path>
+            <path id="far-leg" d="M450 342 497.9 386.3 447 463" fill="none" stroke="#ca9353" stroke-width="8"></path>
+            <g id="far-foot" transform="translate(447 463)">
+              <path d="M-8-8Q-7-19 2-16L10-7 20-4 16 0H-8Z" fill="#ce9655" stroke="#384a42" stroke-width="2.5"></path>
+              <path d="M-13 3H20" stroke="#5d665b" stroke-width="5"></path>
+            </g>
+          </g>
+          <g id="bicycle" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M345 480 427 397 475 463Z M427 397 618 385 475 463 M618 385 665 480" fill="none" stroke="#2e5149" stroke-width="12"></path>
+            <path d="M345 480 427 397 475 463Z M427 397 618 385 475 463 M618 385 665 480" fill="none" stroke="#72a18b" stroke-width="7"></path>
+            <path d="M345 480 475 483Q500 480 500 462Q500 443 475 444L345 474Z" fill="none" stroke="#6c8273" stroke-width="3"></path>
+            <circle cx="475" cy="463" r="21" fill="#e4daba" stroke="#304440" stroke-width="3"></circle>
+            <circle cx="475" cy="463" r="13" fill="none" stroke="#8b9c87" stroke-width="2" stroke-dasharray="3 4"></circle>
+            <path d="M427 397 422 377M618 385 601 329 625 315 647 315" fill="none" stroke="#304440" stroke-width="7"></path>
+            <path d="M611 314H643" stroke="#986e4f" stroke-width="9"></path>
+            <path d="M399 375q23-8 49 0v8h-49Z" fill="#976e4c" stroke="#304440" stroke-width="3"></path>
+            <path d="M606 333q-15 30 30 79" fill="none" stroke="#71867c" stroke-width="2"></path>
+            <circle cx="610" cy="326" r="6" fill="#e2bd71" stroke="#304440" stroke-width="2"></circle>
+          </g>
+          <g id="pelican" stroke="#304440" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M376 317 328 300 353 333 327 332 366 354Z" fill="#e4e7d9"></path>
+            <path d="M363 311Q398 277 455 292Q471 284 470 257L470 218Q469 180 505 176Q540 174 547 205Q551 231 531 244L509 258Q510 300 497 329Q485 365 455 374Q401 393 368 365Q345 345 363 311Z" fill="#fffdf0"></path>
+            <path d="M478 224Q481 248 490 262Q494 283 480 308" fill="none" stroke="#ced7c8" stroke-width="10"></path>
+            <path d="M535 242 764 249Q715 298 650 296Q570 298 535 257Z" fill="#e6ae62"></path>
+            <path d="M544 257Q577 280 610 281" fill="none" stroke="#f5cd8c" stroke-width="5"></path>
+            <path d="M532 227 772 246Q781 250 772 255L531 249Z" fill="#f0c478"></path>
+            <path d="M552 240 758 248" fill="none" stroke="#cf9a53" stroke-width="1.8"></path>
+            <circle cx="525" cy="207" r="6.5" fill="#304440" stroke="none"></circle>
+            <circle cx="527" cy="205" r="1.9" fill="#fffdf0" stroke="none"></circle>
+            <path d="M512 192q10-6 20-1" fill="none" stroke-width="2.5"></path>
+            <path d="M486 177q-4-8-12-10m18 8q0-11-5-17" fill="none" stroke-width="2.5"></path>
+            <path d="M368 334q-3 21 17 30" fill="none" stroke="#d6ddcc" stroke-width="4"></path>
+          </g>
+          <g id="near-limb" stroke-linecap="round" stroke-linejoin="round">
+            <path id="near-leg-outline" d="M450 342 523.8 381.4 503 463" fill="none" stroke="#304440" stroke-width="14"></path>
+            <path id="near-leg" d="M450 342 523.8 381.4 503 463" fill="none" stroke="#e9b566" stroke-width="9"></path>
+            <path id="near-crank" d="M475 463 503 463" fill="none" stroke="#304440" stroke-width="6"></path>
+            <circle cx="475" cy="463" r="5" fill="#304440"></circle>
+            <g id="near-foot" transform="translate(503 463)">
+              <path d="M-8-8Q-7-19 2-16L10-7 20-4 16 0H-8Z" fill="#efba6c" stroke="#304440" stroke-width="2.5"></path>
+              <path d="M3-8 8-3m2-5 5 5" fill="none" stroke="#b98040" stroke-width="1.5"></path>
+              <path d="M-13 3H20" stroke="#304440" stroke-width="5"></path>
+            </g>
+          </g>
+          <g id="wing" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M400 305Q430 279 465 297L600 315Q617 312 628 321Q619 334 604 331L477 329Q443 358 415 344Q393 333 400 305Z" fill="#dbe1d1" stroke="#304440" stroke-width="3.5"></path>
+            <path d="M416 310q22-11 43 3m-42 8q19-5 35 1m-34 11q13-1 24 2" fill="none" stroke="#aabaaa" stroke-width="2.5"></path>
+            <path d="M596 316q4 8 2 14m9-14q4 8 2 14" fill="none" stroke="#899f8c" stroke-width="2"></path>
+          </g>
+          <g fill="#6e826f" font-family="sans-serif" font-size="10" letter-spacing="3" aria-hidden="true">
+            <text x="48" y="660">A LITTLE RIDE, A LITTLE JOY.</text>
+            <text x="950" y="660" text-anchor="end">COASTAL ROUTE / 01</text>
+          </g>
+        </svg>
+      </figure>
+      <div class="caption">
+        <span class="caption-text"><span class="dot" aria-hidden="true"></span>今日路线：沿着海岸，直到心情变好。</span>
+        <span class="caption-index">慢行日记 / 01</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
